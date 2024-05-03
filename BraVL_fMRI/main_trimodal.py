@@ -8,6 +8,11 @@ from utils.filehandling import create_dir_structure
 from brain_image_text.flags import parser
 from brain_image_text.experiment import BrainImageText
 torch.set_default_tensor_type(torch.DoubleTensor)
+
+"""
+Performs several tasks related to a deep learning experiment involving brain image and text data.
+"""
+
 if __name__ == '__main__':
     FLAGS = parser.parse_args()
     use_cuda = torch.cuda.is_available()

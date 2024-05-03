@@ -17,6 +17,19 @@ import csv
 from utils import utils
 from utils.TBLogger import TBLogger
 
+"""
+Implementing various functions related to training a variational autoencoder (VAE) or a similar probabilistic generative model.
+Utility Functions:
+
+1. log_mean_exp: Computes the logarithm of the mean of exponentials of input values along a specified dimension.
+2. m_cubo: Calculates a modified Cubo (Cross-Modal Variational Lower Bound) objective function. This function seems specific to the model architecture being used, involving log probabilities of various distributions.
+3. log_li: Computes the logarithm of likelihoods given the mean and standard deviation of a distribution and the input variable.
+4. mutual_info: Computes mutual information between different modalities or subsets of data.
+5. calc_log_probs: Calculates log probabilities of reconstructed data for each modality and computes a weighted log probability based on reconstruction weights.
+6. calc_klds and calc_klds_style: Calculate KL divergence between inferred latent distributions and prior distributions for subsets or modalities.
+7. calc_style_kld: Computes a weighted KL divergence for style components of modalities.
+"""
+
 sns.set(rc={'figure.figsize':(11.7,8.27)})
 palette = sns.color_palette("bright", 2)
 torch.set_default_tensor_type(torch.DoubleTensor)

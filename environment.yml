@@ -1,7 +1,6 @@
 name: BraVL
 channels:
   - pytorch
-  - anaconda
   - conda-forge
   - defaults
   - bioconda

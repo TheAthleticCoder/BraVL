@@ -1,6 +1,14 @@
 import numpy as np
 from itertools import combinations
 
+
+"""
+Takes fMRI data as input and returns the indices of the most stable voxels based on repeated measurements.
+The function takes in a 3D array data, where the dimensions represent the number of repetitions, the number of items, 
+and the number of voxels, respectively. Additionally, it takes an optional parameter n, 
+which specifies the number of top stable voxels to return.
+"""
+
 def stability_selection(data, n=None):
     """Return the indices of the n voxels with best stability
 

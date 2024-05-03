@@ -10,6 +10,15 @@ from stability_selection import stability_selection
 from sklearn.decomposition import PCA
 from scipy import io
 
+
+"""
+1. It loads brain data and image features for each subject and ROI. It also initializes directories for storing results.
+2. It performs stability selection for feature selection, iterating through subjects and ROIs and selecting a subset of features based on stability selection algorithm.
+3. It preprocesses the brain and image feature data by normalizing and applying PCA for dimensionality reduction.
+4. It saves the preprocessed brain and image feature data into .mat files.
+5. It prepares text feature data by loading from pickled files, sorting them, and saving them into .mat files.
+"""
+
 # Settings ###################################################################
 seed = 42
 TINY = 1e-8
