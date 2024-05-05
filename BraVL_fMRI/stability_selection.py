@@ -9,6 +9,7 @@ and the number of voxels, respectively. Additionally, it takes an optional param
 which specifies the number of top stable voxels to return.
 """
 
+
 def stability_selection(data, n=None):
     """Return the indices of the n voxels with best stability
 
@@ -37,7 +38,7 @@ def stability_selection(data, n=None):
     if n is None:
         n = n_voxels
     elif n > n_voxels:
-        raise ValueError('n must be a number between 0 and ' + n_voxels)
+        raise ValueError("n must be a number between 0 and " + n_voxels)
 
     # Drop all voxels don't contain NaN's for any items
     non_nan_mask = ~np.any(np.any(np.isnan(data), axis=1), axis=0)
