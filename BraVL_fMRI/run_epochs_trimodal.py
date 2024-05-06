@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 import math
 import random
 import torch
@@ -968,11 +969,25 @@ def run_classification_test(exp, observation, type):
 
         tsne = TSNE()
         X_embedded = tsne.fit_transform(X)
+        # sns.scatterplot(
+        #     X_embedded[:, 0],
+        #     X_embedded[:, 1],
+        #     hue=sgn,
+        #     style=sgn,
+        #     legend="brief",
+        #     palette=palette,
+        # )
+        data = pd.DataFrame(
+            {"x": X_embedded[:, 0], "y": X_embedded[:, 1], "hue": sgn, "style": sgn}
+        )
+
+        # Call scatterplot with keyword arguments
         sns.scatterplot(
-            X_embedded[:, 0],
-            X_embedded[:, 1],
-            hue=sgn,
-            style=sgn,
+            data=data,
+            x="x",
+            y="y",
+            hue="hue",
+            style="style",
             legend="brief",
             palette=palette,
         )
