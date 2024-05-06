@@ -44,7 +44,7 @@ if SEED is not None:
     random.seed(SEED)
 
 
-def log_mean_exp(value, dim=0, keepdim=False):
+def log_mean_exp(value, dim=0, keepdim=Falsbatche):
     return torch.logsumexp(value, dim, keepdim=keepdim) - math.log(value.size(dim))
 
 
@@ -966,11 +966,39 @@ def run_classification_test(exp, observation, type):
             (np.ones_like(np.squeeze(label)), np.zeros_like(np.squeeze(label))), axis=0
         )
 
-        # tsne = TSNE()
-        # X_embedded = tsne.fit_transform(X)
-        # sns.scatterplot(X_embedded[:, 0], X_embedded[:, 1], hue=sgn, style=sgn, legend='brief', palette=palette)
-        # path = './results/' + exp.flags.dataname + '_' + exp.flags.sbj + '_' + exp.flags.roi + '_' + exp.flags.aug_type + '_' + exp.flags.text_model + '_' + exp.flags.image_model.split('/')[-1] + '_' + str(exp.flags.lambda1) + '_' + str(exp.flags.lambda2) + '_' + str(exp.flags.class_dim) + '_' + exp.flags.method
-        # plt.savefig(path+'_brain_vs_brain_rec.pdf',dpi=500)
+        tsne = TSNE()
+        X_embedded = tsne.fit_transform(X)
+        sns.scatterplot(
+            X_embedded[:, 0],
+            X_embedded[:, 1],
+            hue=sgn,
+            style=sgn,
+            legend="brief",
+            palette=palette,
+        )
+        path = (
+            "./results/"
+            + exp.flags.dataname
+            + "_"
+            + exp.flags.sbj
+            + "_"
+            + exp.flags.roi
+            + "_"
+            + exp.flags.aug_type
+            + "_"
+            + exp.flags.text_model
+            + "_"
+            + exp.flags.image_model.split("/")[-1]
+            + "_"
+            + str(exp.flags.lambda1)
+            + "_"
+            + str(exp.flags.lambda2)
+            + "_"
+            + str(exp.flags.class_dim)
+            + "_"
+            + exp.flags.method
+        )
+        plt.savefig(path + "_brain_vs_brain_rec.pdf", dpi=500)
 
     elif observation == "image":
         z_train = []
@@ -1016,6 +1044,7 @@ def run_classification_test(exp, observation, type):
 
 
 def create_csv(path, top1, top5):
+    os.makedirs(os.path.dirname(path), exist_ok=True)  # Create directory if needed
     with open(path, "w") as f:
         csv_writer = csv.writer(f)
         head = ["top1", "top5"]
