@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     mst = BrainImageText(FLAGS, alphabet)
     mst.set_optimizer()
-    mst.mm_vae = torch.nn.DataParallel(mst.mm_vae)
+
     total_params = sum(p.numel() for p in mst.mm_vae.parameters())
     print("num parameters model: " + str(total_params))
     run_epochs_trimodal(mst)
