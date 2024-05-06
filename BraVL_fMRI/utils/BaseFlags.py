@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 
 # TRAINING
 parser.add_argument(
-    "--batch_size", type=int, default=256, help="batch size for training"
+    "--batch_size", type=int, default=128, help="batch size for training"
 )
 parser.add_argument(
     "--initial_learning_rate", type=float, default=0.0001, help="starting learning rate"
