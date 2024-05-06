@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EPOCH=1
+EPOCH=20
 
 DATASET='DIR-Wiki'
 RATIO=''
