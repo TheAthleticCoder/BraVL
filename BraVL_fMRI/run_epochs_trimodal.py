@@ -952,6 +952,7 @@ def text_inference(exp, type):
 
 
 def run_classification_test(exp, observation, type):
+    os.makedirs("./results", exist_ok=True)
     if observation == "image_text":
         z_train = []
         train_label = []
