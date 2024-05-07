@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-mlp_text_dim = 256
+mlp_text_dim = 512
 
 
 class EncoderText(nn.Module):

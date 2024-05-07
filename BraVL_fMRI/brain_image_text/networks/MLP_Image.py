@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-mlp_image_dim = 1024
+mlp_image_dim = 2048
 
 
 class EncoderImage(nn.Module):

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-global_dim = 256
+global_dim = 512
 
 
 class EncoderBrain(nn.Module):
