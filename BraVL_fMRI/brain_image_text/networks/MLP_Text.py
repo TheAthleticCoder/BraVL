@@ -4,38 +4,34 @@ import torch.nn as nn
 mlp_text_dim = 512
 
 
-# Residual Block (same as before)
-class ResidualBlock(nn.Module):
-    def __init__(self, hidden_dim):
-        super(ResidualBlock, self).__init__()
-        self.linear1 = nn.Linear(hidden_dim, hidden_dim)
-        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
-
-    def forward(self, x):
-        residual = x
-        x = self.linear1(x)
-        x = nn.ReLU(True)(x)
-        x = self.linear2(x)
-        x += residual
-        x = nn.ReLU(True)(x)
-        return x
-
-
 class EncoderText(nn.Module):
     def __init__(self, flags):
         super(EncoderText, self).__init__()
         self.flags = flags
         self.hidden_dim = mlp_text_dim
+        self.embed_dim = flags.class_dim  # Embedding dimension for attention
 
-        # Initial Linear Layer
-        self.linear_in = nn.Linear(flags.m3_dim, self.hidden_dim)
+        # Initial MLP layers (similar to before)
+        modules = []
+        modules.append(
+            nn.Sequential(nn.Linear(flags.m3_dim, self.hidden_dim), nn.ReLU(True))
+        )
+        modules.extend(
+            [
+                nn.Sequential(
+                    nn.Linear(self.hidden_dim, self.hidden_dim), nn.ReLU(True)
+                )
+                for _ in range(flags.num_hidden_layers - 1)
+            ]
+        )
+        self.enc = nn.Sequential(*modules)
 
-        # Residual Blocks
-        self.residual_blocks = nn.ModuleList(
-            [ResidualBlock(self.hidden_dim) for _ in range(flags.num_hidden_layers - 1)]
+        # Self-Attention Layer
+        self.self_attn = nn.MultiheadAttention(
+            self.embed_dim, num_heads=4, batch_first=True
         )
 
-        # Output Layers
+        # Output Layers (similar to before)
         self.hidden_mu = nn.Linear(
             in_features=self.hidden_dim, out_features=flags.class_dim, bias=True
         )
@@ -44,12 +40,14 @@ class EncoderText(nn.Module):
         )
 
     def forward(self, x):
-        h = self.linear_in(x)
-        h = nn.ReLU(True)(h)  # Apply ReLU after the first linear layer
+        h = self.enc(x)  # Pass through initial MLP layers
+        h = h.view(h.size(0), -1, self.embed_dim)  # Reshape for attention
 
-        # Pass through residual blocks
-        for block in self.residual_blocks:
-            h = block(h)
+        # Apply self-attention
+        attn_output, attn_weights = self.self_attn(h, h, h)
+
+        # Combine attention output with original features (experiment with different combinations)
+        h = torch.cat((h, attn_output), dim=-1)
 
         h = h.view(h.size(0), -1)  # Flatten for output layers
         latent_space_mu = self.hidden_mu(h)
