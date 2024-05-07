@@ -4,26 +4,38 @@ import torch.nn as nn
 mlp_image_dim = 2048
 
 
+# Define a Residual Block (same as before)
+class ResidualBlock(nn.Module):
+    def __init__(self, hidden_dim):
+        super(ResidualBlock, self).__init__()
+        self.linear1 = nn.Linear(hidden_dim, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, hidden_dim)
+
+    def forward(self, x):
+        residual = x
+        x = self.linear1(x)
+        x = nn.ReLU(True)(x)
+        x = self.linear2(x)
+        x += residual
+        x = nn.ReLU(True)(x)
+        return x
+
+
 class EncoderImage(nn.Module):
     def __init__(self, flags):
         super(EncoderImage, self).__init__()
         self.flags = flags
         self.hidden_dim = mlp_image_dim
 
-        modules = []
-        modules.append(
-            nn.Sequential(nn.Linear(flags.m2_dim, self.hidden_dim), nn.ReLU(True))
+        # Initial Linear Layer
+        self.linear_in = nn.Linear(flags.m2_dim, self.hidden_dim)
+
+        # Residual Blocks
+        self.residual_blocks = nn.ModuleList(
+            [ResidualBlock(self.hidden_dim) for _ in range(flags.num_hidden_layers - 1)]
         )
-        modules.extend(
-            [
-                nn.Sequential(
-                    nn.Linear(self.hidden_dim, self.hidden_dim), nn.ReLU(True)
-                )
-                for _ in range(flags.num_hidden_layers - 1)
-            ]
-        )
-        self.enc = nn.Sequential(*modules)
-        self.relu = nn.ReLU()
+
+        # Output Layers
         self.hidden_mu = nn.Linear(
             in_features=self.hidden_dim, out_features=flags.class_dim, bias=True
         )
@@ -32,8 +44,14 @@ class EncoderImage(nn.Module):
         )
 
     def forward(self, x):
-        h = self.enc(x)
-        h = h.view(h.size(0), -1)
+        h = self.linear_in(x)
+        h = nn.ReLU(True)(h)  # Apply ReLU after the first linear layer
+
+        # Pass through residual blocks
+        for block in self.residual_blocks:
+            h = block(h)
+
+        h = h.view(h.size(0), -1)  # Flatten for output layers
         latent_space_mu = self.hidden_mu(h)
         latent_space_logvar = self.hidden_logvar(h)
         latent_space_mu = latent_space_mu.view(latent_space_mu.size(0), -1)
