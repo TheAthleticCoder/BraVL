@@ -5,7 +5,7 @@ EPOCH=500
 DATASET='ThingsEEG-Wiki'
 TEXTMODAL='CLIPText'
 IMAGEMODAL='pytorch/cornet_s'
-AUGTYPE='no_aug'
+AUGTYPE='image_text'
 CHANNELS='17channels'
 ########################################
 ##  Subject 1
