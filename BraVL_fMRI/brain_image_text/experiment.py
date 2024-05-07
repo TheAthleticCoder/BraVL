@@ -10,7 +10,7 @@ from torch.utils.data import TensorDataset
 from modalities.Modality import Modality
 from brain_image_text.networks.VAEtrimodal import VAEtrimodal, VAEbimodal
 from brain_image_text.networks.QNET import QNet
-from BraVL.BraVL_fMRI.brain_image_text.networks.MLP_Brain import (
+from brain_image_text.networks.MLP_Brain import (
     EncoderBrain,
     DecoderBrain,
 )
