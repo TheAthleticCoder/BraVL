@@ -9,7 +9,9 @@ class EncoderBrain(nn.Module):
         super(EncoderBrain, self).__init__()
         self.flags = flags
         self.hidden_dim = global_dim
+        self.embed_dim = flags.class_dim  # Embedding dimension for attention
 
+        # Initial MLP layers (similar to before)
         modules = []
         modules.append(
             nn.Sequential(nn.Linear(flags.m1_dim, self.hidden_dim), nn.ReLU(True))
@@ -23,8 +25,13 @@ class EncoderBrain(nn.Module):
             ]
         )
         self.enc = nn.Sequential(*modules)
-        self.relu = nn.ReLU()
 
+        # Self-Attention Layer
+        self.self_attn = nn.MultiheadAttention(
+            self.embed_dim, num_heads=4, batch_first=True
+        )
+
+        # Output Layers (similar to before)
         self.hidden_mu = nn.Linear(
             in_features=self.hidden_dim, out_features=flags.class_dim, bias=True
         )
@@ -33,8 +40,16 @@ class EncoderBrain(nn.Module):
         )
 
     def forward(self, x):
-        h = self.enc(x)
-        h = h.view(h.size(0), -1)
+        h = self.enc(x)  # Pass through initial MLP layers
+        h = h.view(h.size(0), -1, self.embed_dim)  # Reshape for attention
+
+        # Apply self-attention
+        attn_output, attn_weights = self.self_attn(h, h, h)
+
+        # Combine attention output with original features (experiment with different combinations)
+        h = torch.cat((h, attn_output), dim=-1)
+
+        h = h.view(h.size(0), -1)  # Flatten for output layers
         latent_space_mu = self.hidden_mu(h)
         latent_space_logvar = self.hidden_logvar(h)
         latent_space_mu = latent_space_mu.view(latent_space_mu.size(0), -1)
