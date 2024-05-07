@@ -53,7 +53,7 @@ parser.add_argument(
 parser.add_argument(
     "--dir_experiment", type=str, default="./logs", help="directory to save logs in"
 )
-parser.add_argument("--dataname", type=str, default="ThingsEEG-Text", help="dataset")
+parser.add_argument("--dataname", type=str, default="ThingsEEG-Wiki", help="dataset")
 parser.add_argument("--sbj", type=str, default="sub-01", help="eeg subject")
 parser.add_argument("--roi", type=str, default="17channels", help="ROI")
 parser.add_argument(
@@ -117,7 +117,7 @@ parser.add_argument(
 
 
 FLAGS = parser.parse_args()
-data_dir_root = os.path.join("data", FLAGS.dataname)
+data_dir_root = os.path.join("./data", FLAGS.dataname)
 brain_dir = os.path.join(data_dir_root, "brain_feature", FLAGS.roi, FLAGS.sbj)
 image_dir_train = os.path.join(
     data_dir_root, "visual_feature/ThingsTrain", FLAGS.image_model, FLAGS.sbj
