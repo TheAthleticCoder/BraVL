@@ -117,7 +117,7 @@ parser.add_argument(
 
 
 FLAGS = parser.parse_args()
-data_dir_root = os.path.join("./data", FLAGS.dataname)
+data_dir_root = os.path.join("data", FLAGS.dataname)
 brain_dir = os.path.join(data_dir_root, "brain_feature", FLAGS.roi, FLAGS.sbj)
 image_dir_train = os.path.join(
     data_dir_root, "visual_feature/ThingsTrain", FLAGS.image_model, FLAGS.sbj
