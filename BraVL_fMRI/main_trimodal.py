@@ -1,7 +1,8 @@
 import sys
 import os
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import json
 import torch
 from run_epochs_trimodal import run_epochs_trimodal
